@@ -1,0 +1,5 @@
+server:
+  port: 8020
+  servlet:
+    encoding:
+      charset: UTF-8
