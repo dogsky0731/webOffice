@@ -3,3 +3,9 @@ server:
   servlet:
     encoding:
       charset: UTF-8
+    context-path: /web
+
+sign:
+  appid: yozo90Ni0QLR2602
+  appkey: 76227a36f3b8b87640d6349edd04
+
