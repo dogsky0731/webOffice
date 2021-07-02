@@ -1,12 +1,11 @@
 package com.zty.weboffice.service.Impl;
 
 import com.zty.weboffice.service.DocumentOperation;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
+import okhttp3.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,12 +17,30 @@ public class DocumentOperationImpl implements DocumentOperation {
     public String uploadDocument(String appId, String sign, MultipartFile file) {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
                 .build();
-        String name = file.getName();
-        RequestBody body = RequestBody.create(JSON, "wait");
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.setType(MediaType.parse("multipart/form-data"));
+
+        builder.addFormDataPart("appId", appId);
+        builder.addFormDataPart("sign", sign);
+        builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"file\";filename="+file.getOriginalFilename()+"\";filesize=" + file.getSize())
+                , RequestBody.create(MediaType.parse("multipart/form-data"), file.getName()));
+        RequestBody body = builder.build();
+
+        //发送请求
+        Request request = new Request.Builder()
+                .url("http://dmc.yozocloud.cn/api/file/upload")
+                .post(body)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            // 尝试将返回值转换成字符串并返回
+            System.out.println("==>返回结果: " + response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "";
     }
 }

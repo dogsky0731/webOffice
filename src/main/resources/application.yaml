@@ -5,7 +5,10 @@ server:
       charset: UTF-8
     context-path: /web
 
-sign:
+basicinfo:
   appid: yozo90Ni0QLR2602
   appkey: 76227a36f3b8b87640d6349edd04
 
+checkinfo:
+  appid: yozo2Vljfom87547
+  appkey: 6560aea630cfbd2d1e91ee7d5b31
