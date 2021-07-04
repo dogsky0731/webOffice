@@ -22,12 +22,18 @@ public class DocumentOperationImpl implements DocumentOperation {
                 .readTimeout(60, TimeUnit.SECONDS)
                 .build();
         MultipartBody.Builder builder = new MultipartBody.Builder();
-        builder.setType(MediaType.parse("multipart/form-data"));
+//        builder.setType(MediaType.parse("multipart/form-data"));
 
         builder.addFormDataPart("appId", appId);
         builder.addFormDataPart("sign", sign);
-        builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"file\";filename="+file.getOriginalFilename()+"\";filesize=" + file.getSize())
-                , RequestBody.create(MediaType.parse("multipart/form-data"), file.getName()));
+        try {
+            builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"file\";filename=" + file.getOriginalFilename())
+                    , RequestBody.create(MediaType.parse("multipart/form-data"), file.getBytes()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        CommonsMultipartFile cf = (CommonsMultipartFile) file;
+//        DiskFileItem fi = (DiskFileItem) cf.getFileItem();
         RequestBody body = builder.build();
 
         //发送请求

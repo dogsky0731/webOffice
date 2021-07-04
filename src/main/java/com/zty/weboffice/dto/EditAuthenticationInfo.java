@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "basicinfo")
 @Data
-public class BasicAuthenticationInfo {
+public class EditAuthenticationInfo {
     private String appId;
     private String appKey;
 }
